@@ -1,0 +1,863 @@
+async-basics
+setTimeout(() => {
+    
+}, 3000);
+
+setTimeout is a great method for illustrating non-blocking programming concept.
+
+
+CallStack and Event lopp//Refer video 27 video for callstack adn event loop concept.//excellent video for event loop.
+
+
+var x=1;
+var y=x+9;
+console.log(x,y);
+
+callstack-->its a part of v8
+callstack is a simple datastructure that
+keeps the track of functions & statement that currently executing.
+
+
+callstack box:
+var x=1;//var y=x+9;c//console.log(x,y);
+main()//By telling v8 to run the main(), we are telling to starts the program.
+
+
+Refer video 27 video for callstack adn event loop concept.//excellent video for event loop.
+
+
+callback functions & API
+
+example:
+
+var getUser=(id,callback)=>{
+ var user={
+     id:id,
+     name:'Vikram'
+ };
+ setTimeout(()=>{
+    callback(user);  
+ },3000);
+ 
+}
+
+getUser(31,(user)=>{
+  console.log(user);
+});
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/callbacks.js
+{ id: 31, name: 'Vikram' }
+
+
+
+API
+https://maps.googleapis.com/maps/api/geocode/json?address=bengalure
+//will get json output.
+install json viewer to view nice json in google chrome.
+
+
+sysadmin@AcubeL020:/var/www/html/weather-app$ yarn init
+yarn init v1.3.2
+question name (weather-app):
+question version (1.0.0):
+question description:
+question entry point (index.js):
+question repository url:
+question author:
+question license (MIT):
+question private:
+success Saved package.json
+Done in 6.91s.
+
+
+//install request
+Request is designed to be the simplest way possible to make http calls.
+It supports HTTPS and follows redirects by default.
+
+
+
+sysadmin@AcubeL020:/var/www/html/weather-app$ yarn add request@2.83.0 --save
+yarn add v1.3.2
+info No lockfile found.
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved lockfile.
+success Saved 51 new dependencie
+
+example:
+const request=require('request');
+request({
+    url:'https://maps.googleapis.com/maps/api/geocode/json?address=bengalure',
+    json:true
+},(error,response,body)=>{
+  console.log(body);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js
+{ results:
+   [ { address_components: [Object],
+       formatted_address: 'Bengaluru, Karnataka, India',
+       geometry: [Object],
+       place_id: 'ChIJbU60yXAWrjsR4E9-UejD3_g',
+       types: [Object] } ],
+  status: 'OK' }
+
+
+Pretty Printing Objects
+[To explore Objects in console]
+
+
+example:1
+const request=require('request');
+request({
+    url:'https://maps.googleapis.com/maps/api/geocode/json?address=bengalure',
+    json:true
+},(error,response,body)=>{
+  console.log(JSON.stringify(body,undefined,2));
+})
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js
+{
+  "results": [
+    {
+      "address_components": [
+        {
+          "long_name": "Bengaluru",
+          "short_name": "Bengaluru",
+          "types": [
+            "locality",
+            "political"
+          ]
+        }}...........
+
+        ......
+
+
+example:2
+const request=require('request');
+request({
+    url:'https://maps.googleapis.com/maps/api/geocode/json?address=bengalure',
+    json:true
+},(error,response,body)=>{
+  console.log(JSON.stringify(response,undefined,2));
+})
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js
+{
+  "statusCode": 200,
+  "body": {
+    "results": [
+      {
+        "address_components": [
+          {
+            "long_name": "Bengaluru",
+            "short_name": "Bengaluru",
+            "types": [
+              "locality",
+              "political"
+            ]
+          },
+          {
+            "long_name": "Bangalore Urban",
+            "short_name": "Bangalore Urban",
+            "types": [
+              "administrative_area_level_2",
+              "political"
+            ]
+          },
+          {
+            "long_name": "Karnataka",
+            "short_name": "KA",
+            "types": [
+              "administrative_area_level_1",
+              "political"
+            ]
+          },
+          {
+            "long_name": "India",
+            "short_name": "IN",
+            "types": [
+              "country",
+              "political"
+            ]
+          }
+        ],
+        "formatted_address": "Bengaluru, Karnataka, India",
+        "geometry": {
+          "bounds": {
+            "northeast": {
+              "lat": 13.173706,
+              "lng": 77.8826809
+            },
+            "southwest": {
+              "lat": 12.7342888,
+              "lng": 77.3791981
+            }
+          },
+          "location": {
+            "lat": 12.9715987,
+            "lng": 77.5945627
+          },
+          "location_type": "APPROXIMATE",
+          "viewport": {
+            "northeast": {
+              "lat": 13.173706,
+              "lng": 77.8826809
+            },
+            "southwest": {
+              "lat": 12.7342888,
+              "lng": 77.3791981
+            }
+          }
+        },
+        "place_id": "ChIJbU60yXAWrjsR4E9-UejD3_g",
+        "types": [
+          "locality",
+          "political"
+        ]
+      }
+    ],
+    "status": "OK"
+  },
+  "headers": {
+    "content-type": "application/json; charset=UTF-8",
+    "date": "Sat, 03 Feb 2018 06:12:19 GMT",
+    "expires": "Sun, 04 Feb 2018 06:12:19 GMT",
+    "cache-control": "public, max-age=86400",
+    "access-control-allow-origin": "*",
+    "server": "mafe",
+    "x-xss-protection": "1; mode=block",
+    "x-frame-options": "SAMEORIGIN",
+    "alt-svc": "hq=\":443\"; ma=2592000; quic=51303431; quic=51303339; quic=51303338; quic=51303337; quic=51303335,quic=\":443\"; ma=2592000; v=\"41,39,38,37,35\"",
+    "accept-ranges": "none",
+    "vary": "Accept-Language,Accept-Encoding",
+    "connection": "close"
+  },
+  "request": {//important note it,request object
+    "uri": {
+      "protocol": "https:",
+      "slashes": true,
+      "auth": null,
+      "host": "maps.googleapis.com",
+      "port": 443,
+      "hostname": "maps.googleapis.com",
+      "hash": null,
+      "search": "?address=bengalure",
+      "query": "address=bengalure",
+      "pathname": "/maps/api/geocode/json",
+      "path": "/maps/api/geocode/json?address=bengalure",
+      "href": "https://maps.googleapis.com/maps/api/geocode/json?address=bengalure"
+    },
+    "method": "GET",
+    "headers": {
+      "accept": "application/json"
+    }
+  }
+}
+
+
+description:
+when we set  json:true in options in rquest obect, below header is set.
+"method": "GET",
+"headers": {
+    "accept": "application/json"
+}
+
+
+
+example:3
+
+const request=require('request');
+
+request({
+    url:'https://maps.gsoogleapis.com/maps/api/geocode/json?address=bengalure',//wrong url
+    json:true
+},(error,response,body)=>{
+  console.log(JSON.stringify(error,undefined,2));
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js
+{
+  "code": "ENOTFOUND",
+  "errno": "ENOTFOUND",
+  "syscall": "getaddrinfo",
+  "hostname": "maps.gsoogleapis.com",
+  "host": "maps.gsoogleapis.com",
+  "port": 443
+}
+
+
+
+example:4
+
+
+const request=require('request');
+
+request({
+    url:'https://maps.googleapis.com/maps/api/geocode/json?address=bengalure',
+    json:true
+},(error,response,body)=>{
+    console.log(`Location:${body.results[0].formatted_address}`);
+    console.log(`Latitude:${body.results[0].geometry.location.lat}`);
+    console.log(`Longitude:${body.results[0].geometry.location.lng}`);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js
+Location:Bengaluru, Karnataka, India
+Latitude:12.9715987
+Longitude:77.5945627
+
+
+
+yargs:
+Example:
+const yargs=require('yargs');
+const argv=yargs.
+options({
+  a:{
+      demand:true,
+      alias:'address',
+      describe:'Address to fetch weather for ',
+      string:true//tells yargs to always parse address as a string 
+  }
+})
+.help()
+.alias('help','h')
+.argv;
+console.log(argv);
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js --help
+Options:
+  -a, --address  Address to fetch weather for                [string] [required]
+  --help, -h     Show help                                             [boolean]
+
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js -a 'bengalure'
+{ _: [],
+  help: false,
+  h: false,
+  a: 'bengalure',
+  address: 'bengalure',
+  '$0': 'playground/app.js' }
+
+
+
+  Encoding User Input
+ 
+ sysadmin@AcubeL020:/var/www/html/weather-app$ node 
+ > encodeURIComponent('Marathalli bengalure');
+'Marathalli%20bengalure'
+> decodeURIComponent('Marathalli%20bengalure');
+'Marathalli bengalure'
+
+
+example:
+
+const request=require('request');
+const yargs=require('yargs');
+const argv=yargs.
+options({
+  a:{
+      demand:true,
+      alias:'address',
+      describe:'Address to fetch weather for ',
+      string:true//tells yargs to always parse address as a string 
+  }
+})
+.help()
+.alias('help','h')
+.argv;
+
+
+let url=`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(argv.a)}`;
+request({
+    url,
+    json:true
+},(error,response,body)=>{
+    console.log(`Location:${body.results[0].formatted_address}`);
+    console.log(`Latitude:${body.results[0].geometry.location.lat}`);
+    console.log(`Longitude:${body.results[0].geometry.location.lng}`);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js -a 'marathalli bengalure'
+Location:Marathahalli, Bengaluru, Karnataka, India
+Latitude:12.9591722
+Longitude:77.697419
+
+
+
+
+
+example#:
+
+const request=require('request');
+const yargs=require('yargs');
+const argv=yargs.
+options({
+  a:{
+      demand:true,
+      alias:'address',
+      describe:'Address to fetch weather for ',
+      string:true//tells yargs to always parse address as a string 
+  }
+})
+.help()
+.alias('help','h')
+.argv;
+
+
+let url=`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(argv.a)}`;
+request({
+    url,
+    json:true
+},(error,response,body)=>{
+    if(error){
+        console.log('unable to connect to google servers');
+    }
+    else  if (body.status==='ZERO_RESULTS'){
+        console.log('unable to find the address');
+    }
+    else if(body.status==='OK'){
+        console.log(`Location:${body.results[0].formatted_address}`);
+        console.log(`Latitude:${body.results[0].geometry.location.lat}`);
+        console.log(`Longitude:${body.results[0].geometry.location.lng}`);
+    }
+  
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js -a 560036
+unable to connect to google servers
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js -a bengalure
+Location:Bengaluru, Karnataka, India
+Latitude:12.9715987
+Longitude:77.5945627
+
+
+
+
+
+
+
+Abstracting callbacks
+
+app.js
+
+const yargs=require('yargs');
+const geocode=require('./geocode/geocode');
+const argv=yargs.
+options({
+  a:{
+      demand:true,
+      alias:'address',
+      describe:'Address to fetch weather for ',
+      string:true//tells yargs to always parse address as a string 
+  }
+})
+.help()
+.alias('help','h')
+.argv;
+geocode.geocodeAddress(argv.address,(errorMessage,response)=>{
+   
+    if(errorMessage){
+        console.log(errorMessage);
+    }
+    else {
+        console.log(JSON.stringify(response,undefined,2));
+    }
+});
+
+
+geocode/geocode.js 
+const request=require('request');
+const geocodeAddress=(address,callback)=>{
+    let url=`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}`;
+    request({
+        url,
+        json:true
+    },(error,response,body)=>{
+        if(error){
+            callback('unable to connect to google servers');
+        }
+        else  if (body.status==='ZERO_RESULTS'){
+            callback('unable to find the address');
+        }
+        else if(body.status==='OK'){
+            callback(undefined,{
+                  address:body.results[0].formatted_address,
+                  lan:body.results[0].geometry.location.lng,
+                  lat:body.results[0].geometry.location.lat
+            });
+        }
+      
+    })
+}
+
+module.exports={
+    geocodeAddress
+}
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js -a bengalure
+{
+  "address": "Bengaluru, Karnataka, India",
+  "lan": 77.5945627,
+  "lat": 12.9715987
+}
+
+chaining callbacks together
+
+app.js
+
+const yargs=require('yargs');
+const geocode=require('./geocode/geocode');
+const weather=require('./weather/weather');
+
+const argv=yargs.
+options({
+  a:{
+      demand:true,
+      alias:'address',
+      describe:'Address to fetch weather for ',
+      string:true//tells yargs to always parse address as a string 
+  }
+})
+.help()
+.alias('help','h')
+.argv;
+
+geocode.geocodeAddress(argv.address,(errorMessage,response)=>{
+   
+    if(errorMessage){
+        console.log(errorMessage);
+    }
+    else {
+        
+           // var data=JSON.parse(response);
+            console.log(response);
+            var lat=response.lat;
+            var lng=response.lan;
+            //  var lat='37.8267';
+            //  var lng='-122.4233';
+            //
+             weather.getWeather(lat,lng,(error1,response2)=>{
+               console.log("temperature is:"+response2.temperature);
+            if(error1){
+              console.log(error1);
+            }
+            else{
+            console.log(response2.temperature);
+            }
+
+            });
+    }
+});
+
+weather/weather.js
+
+const request=require('request');
+
+var getWeather=(lat,lng,callback)=>{
+
+    let url=`https://api.darksky.net/forecast/ecf2b441f028ee797366afd037f9b8fa/${lat},${lng}`;
+    console.log(url);
+    request({
+        url:url,
+        json:true
+        
+    },(error,response,body)=>{
+        if(error){
+            callback('unable to connect to server');
+        }
+        else if(response.statusCode===400){
+            callback('unable to fecth');
+        }
+        else if(response.statusCode===200){
+            callback('undefined',{
+                 temperature:body.currently.temperature
+            });
+        }
+    });
+
+}
+module.exports={
+    getWeather
+}
+
+
+output:
+
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/app.js -a "bengalure"
+{ address: 'Bengaluru, Karnataka, India',
+  lan: 77.5945627,
+  lat: 12.9715987 }
+https://api.darksky.net/forecast/ecf2b441f028ee797366afd037f9b8fa/12.9715987,77.5945627
+temperature is:74.21
+
+
+
+ES6 Promise
+The Promise object represents the eventual completion (or failure) of an asynchronous operation,
+and its resulting value.
+A function that is passed with the arguments resolve and reject. The executor function is executed immediately by the Promise implementation, passing resolve and reject functions (the executor is called before the Promise constructor even returns the created object). The resolve and reject functions, when called, resolve or reject the promise, respectively. The executor normally initiates some asynchronous work, and then, once that completes, either calls the resolve function to resolve the promise or else rejects it if an error occurred.
+
+
+example:1
+var somePromise=new Promise((resolve,reject)=>{
+
+   setTimeout(()=>{
+    resolve('Hey!,it worked');
+   },2000)
+});
+//we need to call Promise method then() inorder to things or either resolve,reject.
+somePromise.then((message)=>{
+  console.log('success',message);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+success Hey!,it worked
+
+
+example:2
+
+
+var somePromise=new Promise((resolve,reject)=>{
+
+   setTimeout(()=>{
+   //resolve('Hey!,it worked');
+   reject('Unable to fullfill promise');
+   },2000)
+});
+//we need to call Promise method then() inorder to things or either resolve,reject.
+somePromise.then((message)=>{
+  console.log('success',message);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+(node:3293) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): Unable to fullfill promise
+
+//To handle above UnhandledPromiseRejectionWarning have to do as below
+var somePromise=new Promise((resolve,reject)=>{
+
+   setTimeout(()=>{
+   //resolve('Hey!,it worked');
+   reject('Unable to fullfill promise');
+   },2000)
+});
+//we need to call Promise method then() inorder to things or either resolve,reject.
+somePromise.then((message)=>{
+  console.log('success',message);
+},(errorMessage)=>{//this function clear the error UnhandledPromiseRejectionWarning:
+  console.log(errorMessage);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+Unable to fullfill promise
+
+note:At any given time we can do only of the thing
+i.e either resolve or reject
+
+
+example:4
+
+
+var somePromise=new Promise((resolve,reject)=>{
+
+   setTimeout(()=>{
+   reject('Hey!,something went wrong..');
+   },2000)
+});
+//we need to call Promise method then() inorder to things or either resolve,reject.
+somePromise.then((message)=>{
+  console.log('success',message);
+})
+.then(()=>{
+    console.log(" am also ran");
+})
+.then(()=>{
+    console.log('Again ran..');
+})
+.catch((errorMessage)=>{//this function clear the error UnhandledPromiseRejectionWarning:
+    console.log(errorMessage);
+  })
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+Hey!,something went wrong..
+
+
+
+example:5
+promise.js
+var asyncAdd=(a,b)=>{
+  
+    return new Promise((resolve,reject)=>{
+       
+       setTimeout(()=>{
+        if(typeof a ==='number' && typeof b ==='number'){
+            resolve(a+b);
+        }
+        else{
+            reject();
+        }
+       },1500) 
+    })
+}
+
+asyncAdd(5,7)
+.then((res)=>{
+    console.log(res);
+})
+.catch(()=>{
+    console.log('Not a number...');
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+Not a number...
+
+example:6
+var asyncAdd=(a,b)=>{
+  
+    return new Promise((resolve,reject)=>{
+       
+       setTimeout(()=>{
+        if(typeof a ==='number' && typeof b ==='number'){
+            resolve(a+b);
+        }
+        else{
+            reject('Not a number');
+        }
+       },1500) 
+    })
+}
+
+asyncAdd(5,7)
+.then((res)=>{
+    console.log(res);
+
+        asyncAdd(res,33)
+        .then((res)=>{
+            console.log(res);
+        })
+        .catch((errorMessage)=>{
+            console.log(errorMessage);
+        })
+
+})
+.catch((errorMessage)=>{
+    console.log(errorMessage);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+12
+45
+
+
+example:7
+var asyncAdd=(a,b)=>{
+  
+    return new Promise((resolve,reject)=>{
+       
+       setTimeout(()=>{
+        if(typeof a ==='number' && typeof b ==='number'){
+            resolve(a+b);
+        }
+        else{
+            reject('Not a number');
+        }
+       },1500) 
+    })
+}
+
+asyncAdd(5,7)
+.then((res)=>{
+    console.log(res);
+    return asyncAdd(res,'33');
+  
+})
+  .then((res)=>{
+        console.log(res);
+    })
+.catch((errorMessage)=>{
+    console.log(errorMessage);
+})
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+12
+Not a number
+
+
+A very simplified Promise then() method with multiple callbacks as stephen  grider tutrials
+
+example:
+var asyncAdd=(a,b)=>{
+    return new Promise((resolve,reject)=>{
+       
+       setTimeout(()=>{
+        if(typeof a ==='number' && typeof b ==='number'){
+            resolve(a+b);
+        }
+        else{
+            reject('Not a number');
+        }
+       },1500) 
+    })
+}
+
+asyncAdd(5,7)
+.then((res)=>{
+    console.log(res);
+    return asyncAdd(res,'33');
+})
+.then((res)=>{
+    console.log(res);
+})
+
+.catch((errorMessage)=>{
+    console.log(errorMessage);
+})
+
+
+output:
+sysadmin@AcubeL020:/var/www/html/weather-app$ node playground/promise.js
+12
+Not a number
+
+
+
+note:
+some libraries support promise and some don't.
+
+
+
+
+
+Advanced Promises
+
+example:
+
+const request=require('request');
+var geocodeAddress=(address)=>{
+    
+    let url=`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}`;
+    return new Promise((resolve,reject)=>{
+           request({
+               url,
+               json:true
+           },(error,response,body)=>{
+                 if(error){
+                     reject('Not able to fetch');
+                 }
+                
